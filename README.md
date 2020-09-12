@@ -6,10 +6,12 @@ To use it, just import the package included in *releases* tab. The tool window i
 
 ## Compatibility
 Should work with all Unity versions above 5.2 (Tested on 2020.2.0b1)
+
 Works with both HDRP/URP and Standard Pipeline. (Tested on HDRP only)
 
 ## Credits
 All materials credit goes to [CC0Textures.com](https://cc0textures.com)
+
 Used the [DotNetZip For Unity](https://github.com/r2d2rigo/dotnetzip-for-unity) lib.
 
 ## Usage
