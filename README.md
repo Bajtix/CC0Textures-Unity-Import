@@ -15,6 +15,8 @@ All materials credit goes to [CC0Textures.com](https://cc0textures.com)
 
 Used the [DotNetZip For Unity](https://github.com/r2d2rigo/dotnetzip-for-unity) lib.
 
+Requires JSON.Net [UnityPackage](https://github.com/jilleJr/Newtonsoft.Json-for-Unity)
+
 ## Bugs and issues
 The tool contains many bugs, which will eventually get fixed. Please report all issues to the Issues section.
 
