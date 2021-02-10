@@ -13,10 +13,14 @@ Should work with all Unity versions above 2019.4.0f1, and quite possibly some ol
 
 ### v2.0
 **(NEW)** Works with both HDRP/URP! 
+
 *Dropped the Standard Pipeline support because of the switch to custom shaders.*
+
 **Bugfix** Now it should not crash when assets are not found or when the site is unreachable
+
 **Bugfix** Fixed some UI issues
-And some more things.
+
+And some other things.
 
 ## Credits
 All materials credit goes to [CC0Textures.com](https://cc0textures.com)
