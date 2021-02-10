@@ -140,29 +140,60 @@ namespace CC02U {
 
                 //heightTex = duplicateTexture(metalTex);
             }
-
+            var maskmap = CreateMaskMap(metalTex, aoTex, roughnessTex);
+            File.WriteAllBytes(Application.dataPath + "/Materials/Textures/" + texName + "_MaskMap.jpg", maskmap.EncodeToJPG()); //create and save mask map (for HDRP)
+            maskmap = AssetDatabase.LoadAssetAtPath("Assets/Materials/Textures/" + texName + "_MaskMap.jpg", typeof(Texture2D)) as Texture2D;
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
             Debug.Log("Waiting for processes to finish...");
             yield return new WaitForSecondsRealtime(1);
 
-
+            
             // CREATE THE MATERIAL
-
+            
             Debug.Log("Creating the material");
-            Shader ashder = Shader.Find("CC02U Shader");
+
+            Shader ashder = IsURP() ? Shader.Find("CC02U Shader") : Shader.Find("HDRP/Lit"); //for URP
+
+
             Material material = new Material(ashder);
 
-            material.SetTexture("_MainTex", colorTex);
+            material.SetTexture("_MainTex", colorTex); //all the shaders except hdrp Lit shader
+            material.SetTexture("_BaseColorMap", colorTex); //hdrp Lit shader
+
             material.SetTexture("_NormalMap", normalTex);
-            material.SetTexture("_AO", aoTex);
-            material.SetTexture("_Roughness", roughnessTex);
-            material.SetTexture("_Metallic", metalTex);
-            material.SetTexture("_Height", heightTex);
+
+            if (IsURP()) {
+                material.SetTexture("_AO", aoTex);
+                material.SetTexture("_Roughness", roughnessTex);
+                material.SetTexture("_Metallic", metalTex);
+                material.SetTexture("_Height", heightTex);
+            } else {
+                material.SetTexture("_MaskMap", maskmap);
+                material.SetTexture("_HeightMap", heightTex);
+            }
 
             AssetDatabase.CreateAsset(material, "Assets/Materials/" + texName +".mat");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private Texture2D CreateMaskMap(Texture2D metallic, Texture2D occlusion, Texture2D smoothness) {
+            metallic = duplicateTexture(metallic);
+            occlusion = duplicateTexture(occlusion);
+            smoothness = duplicateTexture(smoothness);
+            Texture2D result = new Texture2D(metallic.width, metallic.height);
+            for (int i = 0; i < metallic.width; i++) {
+                for (int j = 0; j < metallic.height; j++) {
+                    result.SetPixel(i, j, new Color(metallic.GetPixel(i,j).r,
+                        occlusion.GetPixel(i,j).r,
+                        0,
+                        1 - smoothness.GetPixel(i,j).r //invert for smoothness
+                        )); //creates mask based on https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@10.2/manual/Mask-Map-and-Detail-Map.html
+                }
+            }
+            return result;
         }
 
         private Texture2D duplicateTexture(Texture2D source) {
