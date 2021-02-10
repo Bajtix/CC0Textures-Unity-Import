@@ -14,15 +14,15 @@ Should work with all Unity versions above 2019.4.0f1, and quite possibly some ol
 Works natively with URP, but for HDRP: (TODO: fix this issue) (It should be working in the latest patch, but in case it doesn't I'll leave this section here)
 ~~1. Select the shader graph Assets/CC0Download/CC0TexGraph~~
 
-~~2. Click "View generated code" in the inspector (or in other versions you may need to select the master PBR node in the Graph Editor)
+~~2. Click "View generated code" in the inspector (or in other versions you may need to select the master PBR node in the Graph Editor)~~
 
-~~3. Copy the code
+~~3. Copy the code~~
 
-~~4. Open the shader file "CC02UShader" and paste
+~~4. Open the shader file "CC02UShader" and paste~~
 
-~~5. At the top of this file change the name to "CC02U Shader"
+~~5. At the top of this file change the name to "CC02U Shader"~~
 
-~~6. Should work now.~~
+6. Should work now.
 
 ### v2.0
 **(NEW)** Works with both HDRP/URP! Check the compatibility section.
