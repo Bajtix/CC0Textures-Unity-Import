@@ -11,8 +11,16 @@ To use it, just import the package included in *releases* tab. The tool window i
 ## Compatibility and changelogs
 Should work with all Unity versions above 2019.4.0f1, and quite possibly some older ones. Supports SRP (this includes HDRP and URP)
 
+Works natively with URP, but for HDRP: (TODO: fix this issue)
+1. Select the shader graph Assets/CC0Download/CC0TexGraph
+2. Click "View generated code" in the inspector (or in other versions you may need to select the master PBR node in the Graph Editor)
+3. Copy the code
+4. Open the shader file "CC02UShader" and paste
+5. At the top of this file change the name to "CC02U Shader"
+6. Should work now.
+
 ### v2.0
-**(NEW)** Works with both HDRP/URP! 
+**(NEW)** Works with both HDRP/URP! Check the compatibility section.
 
 *Dropped the Standard Pipeline support because of the switch to custom shaders.*
 
