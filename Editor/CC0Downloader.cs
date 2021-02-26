@@ -98,9 +98,15 @@ namespace CC02U {
             // LOAD TEXTURES
 
             Texture2D roughnessTex = new Texture2D(colorTex.width, colorTex.height);
+            //roughnessTex.SetPixels(new Color[] { Color.gray });
             Texture2D aoTex = new Texture2D(colorTex.width, colorTex.height);
+            //aoTex.SetPixels(new Color[] { Color.gray });
             Texture2D metalTex = new Texture2D(colorTex.width, colorTex.height);
+            //metalTex.SetPixels(new Color[] { Color.gray });
             Texture2D heightTex = new Texture2D(colorTex.width, colorTex.height);
+            //heightTex.SetPixels(new Color[] { Color.black });
+
+
 
             fname = texName + "_" + res + "_Roughness" + ext;
             Debug.Log("Searching for " + (Application.dataPath + "/Materials/Textures/" + fname));
@@ -108,7 +114,7 @@ namespace CC02U {
                 Debug.Log("Loaded Roughness map.");
 
                 roughnessTex = AssetDatabase.LoadAssetAtPath("Assets/Materials/Textures/" + fname, typeof(Texture2D)) as Texture2D;
-
+                
                 //roughnessTex = duplicateTexture(roughnessTex);
             }
             fname = texName + "_" + res + "_AmbientOcclusion" + ext;
@@ -142,9 +148,10 @@ namespace CC02U {
             }
             var maskmap = CreateMaskMap(metalTex, aoTex, roughnessTex);
             File.WriteAllBytes(Application.dataPath + "/Materials/Textures/" + texName + "_MaskMap.jpg", maskmap.EncodeToJPG()); //create and save mask map (for HDRP)
-            maskmap = AssetDatabase.LoadAssetAtPath("Assets/Materials/Textures/" + texName + "_MaskMap.jpg", typeof(Texture2D)) as Texture2D;
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            maskmap = AssetDatabase.LoadAssetAtPath("Assets/Materials/Textures/" + texName + "_MaskMap.jpg", typeof(Texture2D)) as Texture2D;
+            
 
             Debug.Log("Waiting for processes to finish...");
             yield return new WaitForSecondsRealtime(1);
@@ -164,14 +171,30 @@ namespace CC02U {
 
             material.SetTexture("_NormalMap", normalTex);
 
-            if (IsURP()) {
+            Debug.Log("Mask map:" + maskmap.name);
+            //HDRP ONLY
+            if (IsHDRP()) {
+                material.SetTexture("_MaskMap", maskmap);
+                
+
+                if(heightTex != null) { //thanks to @krisrok for suggesting that and providing this code snippet (https://github.com/krisrok)
+
+                    material.EnableKeyword("_DISPLACEMENT_LOCK_TILING_SCALE");
+                    material.EnableKeyword("_HEIGHTMAP");
+                    material.EnableKeyword("_PIXEL_DISPLACEMENT");
+                    material.EnableKeyword("_PIXEL_DISPLACEMENT_LOCK_OBJECT_SCALE");
+
+                    material.SetFloat("_DisplacementMode", 2);
+
+                    material.SetTexture("_HeightMap", heightTex);
+                }
+            } else {
+
+                //URP ONLY
                 material.SetTexture("_AO", aoTex);
                 material.SetTexture("_Roughness", roughnessTex);
                 material.SetTexture("_Metallic", metalTex);
                 material.SetTexture("_Height", heightTex);
-            } else {
-                material.SetTexture("_MaskMap", maskmap);
-                material.SetTexture("_HeightMap", heightTex);
             }
 
             AssetDatabase.CreateAsset(material, "Assets/Materials/" + texName +".mat");
@@ -214,7 +237,8 @@ namespace CC02U {
             return GraphicsSettings.renderPipelineAsset.GetType().Name.Contains("HD");
         }
 
-        private bool IsURP() {
+        private bool IsURP() { //glitched
+            //return false;
             return GraphicsSettings.renderPipelineAsset.GetType().Name.Contains("Universal") || GraphicsSettings.renderPipelineAsset.GetType().Name.Contains("Lightweight");
         }
     }
