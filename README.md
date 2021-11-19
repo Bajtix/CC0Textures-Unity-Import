@@ -2,8 +2,8 @@
 # CC0Download
 Import plugin for Unity to download assets from https://cc0textures.com directly from the UI!
 
-## IMPORTANT: PLEASE UPDATE IF USING v1
-> I made a lot of very important changes and fixes, and v1 is now totally obsolete. For your own convinience, please update it if you are using the package.
+## IMPORTANT: MAY NOT WORK
+> Due to the changes in unity (and cc0textures.com becoming ambientcg.com) this plugin may not work anymore in newer versions of the engine
 
 ## Download
 To use it, just import the package included in *releases* tab. The tool window is in Tools/CC02U.
